@@ -18,49 +18,83 @@ def intent_node(state: SupportAgentState):
     - product_category
     """
 
-    user_query = state.get("user_query", "").lower()
+    user_query = state.get("user_query", "").lower().strip()
 
-    # ---------------------------------------------------------
+    # --------------------------------------------------
     # Return-risk related questions
-    # ---------------------------------------------------------
+    # --------------------------------------------------
 
-    if any(
-        keyword in user_query
-        for keyword in [
-            "return risk",
-            "return probability",
-            "risk of return",
-            "likely to return",
-            "will this order be returned",
-            "return prediction",
-        ]
-    ):
+    return_risk_keywords = [
+        "return risk",
+        "return probability",
+        "risk of return",
+        "likely to return",
+        "will this order be returned",
+        "return prediction",
+        "chance of return",
+        "probability of return",
+        "will my order be returned",
+        "chance that my order will be returned",
+        "chance my order will be returned",
+        "likelihood of return",
+        "likelihood that my order will be returned",
+        "how likely is my order to be returned",
+    ]
+
+    if any(keyword in user_query for keyword in return_risk_keywords):
         return {
             "intent": "return_risk"
         }
 
-    # ---------------------------------------------------------
+    # --------------------------------------------------
     # Product-category related questions
-    # ---------------------------------------------------------
+    # --------------------------------------------------
 
-    if any(
-        keyword in user_query
-        for keyword in [
-            "product category",
-            "which category",
-            "what category",
-            "classify product",
-            "classify this product",
-            "product classification",
-        ]
-    ):
+    category_keywords = [
+        "product category",
+        "which category",
+        "what category",
+        "classify product",
+        "classify this product",
+        "product classification",
+        "what type of product",
+        "type of product",
+    ]
+
+    if any(keyword in user_query for keyword in category_keywords):
         return {
             "intent": "product_category"
         }
 
-    # ---------------------------------------------------------
-    # Everything else is treated as a policy question
-    # ---------------------------------------------------------
+    # --------------------------------------------------
+    # Policy questions
+    # --------------------------------------------------
+
+    policy_keywords = [
+        "return policy",
+        "refund policy",
+        "exchange policy",
+        "cancellation policy",
+        "delivery policy",
+        "return window",
+        "how many days can i return",
+        "when will i get my refund",
+        "can i return",
+        "can i cancel",
+        "can i exchange",
+        "damaged product",
+        "wrong product",
+        "missing accessory",
+    ]
+
+    if any(keyword in user_query for keyword in policy_keywords):
+        return {
+            "intent": "policy_question"
+        }
+
+    # --------------------------------------------------
+    # Default
+    # --------------------------------------------------
 
     return {
         "intent": "policy_question"
